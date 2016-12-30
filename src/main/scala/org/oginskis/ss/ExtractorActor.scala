@@ -1,8 +1,4 @@
 package org.oginskis.ss
-
-/**
-  * Created by oginskis on 30/12/2016.
-  */
 import akka.actor.{Actor, ActorLogging}
 
 /**
