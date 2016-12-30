@@ -6,3 +6,5 @@
 /target/
 /.idea_modules/
 /.idea/
+/.sbtserver/
+/projectFilesBackup/
