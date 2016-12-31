@@ -1,11 +1,12 @@
-package org.oginskis.ss
-import akka.actor.{Actor, ActorLogging}
-import org.oginskis.ss.repo.FlatRepo
+package org.oginskis.ss.actor
+
+import akka.actor.{Actor, ActorLogging, ActorRef}
+import org.oginskis.ss.tool.FlatExtractor
 
 /**
   * Created by oginskis on 30/12/2016.
   */
-class ExtractingActor extends Actor with ActorLogging {
+class ExtractingActor(persistActor: ActorRef) extends Actor with ActorLogging {
   override def receive: Receive = {
     case ExtractingActor.Extract =>
     {
@@ -16,7 +17,9 @@ class ExtractingActor extends Actor with ActorLogging {
         .sortBy(f=>f.price).filter(a=>a.price>=minPrice).filter(a=>a.price<maxPrice)
       println("We found "+ flats.size +" flats:")
       flats.foreach(flat=>println(flat))
-      flats.foreach(flat=>FlatRepo.addOrUpdateFlat(flat))
+      flats.foreach(flat=> {
+        persistActor ! flat
+      })
     }
   }
 }

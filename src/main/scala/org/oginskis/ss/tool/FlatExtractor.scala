@@ -1,9 +1,9 @@
-package org.oginskis.ss
+package org.oginskis.ss.tool
 
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
-import org.oginskis.ss.model.Flat
 import net.ruippeixotog.scalascraper.model.Element
 import org.jsoup.Connection
+import org.oginskis.ss.model.Flat
 
 /**
   * Created by oginskis on 30/12/2016.

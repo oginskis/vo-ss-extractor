@@ -6,6 +6,7 @@ import java.util.Date
 import com.mongodb._
 import com.mongodb.client.FindIterable
 import org.bson.Document
+import org.oginskis.ss.FlatStatus
 import org.oginskis.ss.model.Flat
 
 /**
@@ -23,7 +24,7 @@ object FlatRepo {
  db.getCollection("flats").createIndex(new BasicDBObject("floor",1))
  db.getCollection("flats").createIndex(new BasicDBObject("rooms",1))
 
- def addOrUpdateFlat(flat: Flat) = {
+ def addOrUpdateFlat(flat: Flat): FlatStatus.Value = {
    def createDocument(flat: Flat): org.bson.Document = {
      val params = new java.util.HashMap[String,Object]()
      params.put("address",flat.address)
@@ -49,6 +50,10 @@ object FlatRepo {
    if (db.getCollection("flats").findOneAndReplace(findFilter(flat)
      ,createDocument(flat)) == null){
      db.getCollection("flats").insertOne(createDocument(flat))
+     FlatStatus.Added
+   }
+   else {
+     FlatStatus.Updated
    }
  }
 }
