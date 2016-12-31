@@ -6,9 +6,9 @@ package org.oginskis.ss.model
 class Flat(
             var address: String,
             var rooms: String,
-            var size: String,
+            var size: Int,
             var floor: String,
-            var price: String,
+            var price: Int,
             var link: String
           ) {
   override def toString: String =

@@ -10,7 +10,6 @@ import org.jsoup.Connection
   */
 object FlatExtractor {
 
-
   class ExtendedJsoupBrowser extends JsoupBrowser {
     override protected[this] def defaultRequestSettings(conn: Connection): Connection = {
       super.defaultRequestSettings(conn)
@@ -34,15 +33,17 @@ object FlatExtractor {
           val attr: List[Element] = entry.select(".msga2-o").toList
           val link: String = entry.select(".msg2 .d1 .am").head.attr("href")
           new Flat(attr(0).text,
-            attr(1).text,
-            attr(2).text,
+            attr(1).text.trim,
+            attr(2).text.trim.toInt,
             attr(3).text,
-            attr(6).text,
+            attr(6).text.replace(",","").replace(" €","").trim.toInt,
             link)
         }) ::: extractFlats(page + 1)
     }
     catch {
-      case unknown: Throwable => List[Flat]()
+      case unknown: Throwable => {
+        List[Flat]()
+      }
     }
   }
 

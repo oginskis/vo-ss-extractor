@@ -10,7 +10,9 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.4" % "test",
   "org.scalaj" % "scalaj-http_2.11" % "2.3.0",
   "org.scala-lang.modules" %% "scala-xml" % "1.0.2",
-  "net.ruippeixotog" %% "scala-scraper" % "1.2.0")
+  "net.ruippeixotog" %% "scala-scraper" % "1.2.0",
+  "org.mongodb" % "mongo-java-driver" % "3.4.1"
+)
 
 
 fork in run := true
