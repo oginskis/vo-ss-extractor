@@ -1,0 +1,2 @@
+mongod --dbpath /Users/oginskis/mongodata/ --auth
+mongo-express
