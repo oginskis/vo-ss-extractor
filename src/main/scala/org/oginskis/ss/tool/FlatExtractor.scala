@@ -10,6 +10,8 @@ import org.oginskis.ss.model.Flat
   */
 object FlatExtractor {
 
+  val SS_LV_BASE ="ss.lv.base.url"
+
   class ExtendedJsoupBrowser extends JsoupBrowser {
     override protected[this] def defaultRequestSettings(conn: Connection): Connection = {
       super.defaultRequestSettings(conn)
@@ -17,15 +19,16 @@ object FlatExtractor {
     }
   }
 
+  val browser = new ExtendedJsoupBrowser()
+
   def extractFlats() : List[Flat] = {
     extractFlats(1)
   }
 
   private def extractFlats(page: Int) : List[Flat] = {
-    val browser = new ExtendedJsoupBrowser()
     try {
       val doc = browser
-        .get("https://www.ss.lv/lv/real-estate/flats/riga/centre/sell/page"
+        .get(Properties.getProperty(SS_LV_BASE)+"/riga/centre/sell/page"
           + page + ".html")
       val rawList: Iterable[Element] = doc.body.select("[id^=\"tr_\"]")
       rawList.init.toList.map(

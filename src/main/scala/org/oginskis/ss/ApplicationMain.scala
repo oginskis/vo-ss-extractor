@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 object ApplicationMain extends App {
-  val system = ActorSystem("MySystem")
+  val system = ActorSystem("flat-extractor-system")
   val notification = system.actorOf(Props(new NotificationActor), name = "notification")
   val persist = system.actorOf(Props(new PersistActor(notification)), name = "persist")
   val extracting = system.actorOf(Props(new ExtractingActor(persist)), name = "extracting")
