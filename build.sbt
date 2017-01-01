@@ -16,5 +16,6 @@ libraryDependencies ++= Seq(
 )
 
 mainClass in Compile := Some("org.oginskis.ss.ApplicationMain")
+mainClass in assembly := Some("org.oginskis.ss.ApplicationMain")
 
 fork in run := true
