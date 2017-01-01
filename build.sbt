@@ -15,5 +15,6 @@ libraryDependencies ++= Seq(
   "javax.mail" % "mail" % "1.4"
 )
 
+mainClass in Compile := Some("org.oginskis.ss.ApplicationMain")
 
 fork in run := true
