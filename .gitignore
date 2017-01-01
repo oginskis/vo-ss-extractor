@@ -8,3 +8,4 @@
 /.idea/
 /.sbtserver/
 /projectFilesBackup/
+/src/main/resources/app.properties
