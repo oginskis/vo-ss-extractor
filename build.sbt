@@ -11,7 +11,8 @@ libraryDependencies ++= Seq(
   "org.scalaj" % "scalaj-http_2.11" % "2.3.0",
   "org.scala-lang.modules" %% "scala-xml" % "1.0.2",
   "net.ruippeixotog" %% "scala-scraper" % "1.2.0",
-  "org.mongodb" % "mongo-java-driver" % "3.4.1"
+  "org.mongodb" % "mongo-java-driver" % "3.4.1",
+  "javax.mail" % "mail" % "1.4"
 )
 
 
