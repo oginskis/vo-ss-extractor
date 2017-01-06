@@ -12,7 +12,8 @@ libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-xml" % "1.0.2",
   "net.ruippeixotog" %% "scala-scraper" % "1.2.0",
   "org.mongodb" % "mongo-java-driver" % "3.4.1",
-  "javax.mail" % "mail" % "1.4"
+  "javax.mail" % "mail" % "1.4",
+  "junit" % "junit" % "4.12"
 )
 
 mainClass in Compile := Some("org.oginskis.ss.ApplicationMain")

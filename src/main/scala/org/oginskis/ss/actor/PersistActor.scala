@@ -12,8 +12,12 @@ class PersistActor(notificationActor: ActorRef) extends Actor with ActorLogging 
   override def receive: Receive = {
     case flat:Flat => {
       val flatStatus = FlatRepo.addOrUpdateFlat(flat)
-      if (FlatStatus.Added == flatStatus) {
-        notificationActor ! flat
+      def matchesFilter(flat:Flat): Boolean ={
+        if (flat.price.get<90000 && flat.size.get>=40) true
+        else false
+      }
+      if (FlatStatus.Added == flatStatus && matchesFilter(flat)) {
+       notificationActor ! flat
       }
     }
   }
