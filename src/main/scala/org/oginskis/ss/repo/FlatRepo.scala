@@ -1,9 +1,9 @@
 package org.oginskis.ss.repo
 
+import java.text.SimpleDateFormat
 import java.util.Date
 
 import com.mongodb._
-import com.mongodb.client.FindIterable
 import org.bson.Document
 import org.oginskis.ss.FlatStatus
 import org.oginskis.ss.model.Flat
@@ -24,16 +24,14 @@ object FlatRepo {
  val MONGODB_SSL = "mongodb.ssl"
  val COLL_NAME= "flats"
 
- val mongo = new MongoClient(new MongoClientURI("mongodb://"+Properties.getProperty(MONGODB_USER)+":"
-   +Properties.getProperty(MONGODB_PASSWORD)+"@"+Properties.getProperty(MONGODB_HOST)
-   +":"+Properties.getProperty(MONGODB_PORT)+"/?ssl="+Properties.getProperty(MONGODB_SSL)))
- val db = mongo.getDatabase(Properties.getProperty(MONGODB_DB))
- db.getCollection(COLL_NAME).createIndex(new BasicDBObject("address",1))
- db.getCollection(COLL_NAME).createIndex(new BasicDBObject("floor",1))
- db.getCollection(COLL_NAME).createIndex(new BasicDBObject("rooms",1))
+  val mongo = new MongoClient(new MongoClientURI("mongodb://"+Properties.getProperty(MONGODB_USER)+":"
+    +Properties.getProperty(MONGODB_PASSWORD)+"@"+Properties.getProperty(MONGODB_HOST)
+    +":"+Properties.getProperty(MONGODB_PORT)+"/?ssl="+Properties.getProperty(MONGODB_SSL)
+  +"&maxIdleTimeMS=6000&minPoolSize=5"))
+  val db = mongo.getDatabase(Properties.getProperty(MONGODB_DB))
 
  def addOrUpdateFlat(flat: Flat): FlatStatus.Value = {
-   def createDocument(flat: Flat): org.bson.Document = {
+   def updateDocument(flat: Flat): org.bson.Document = {
      val params = new java.util.HashMap[String,Object]()
      params.put("address",flat.address.get)
      params.put("floor",flat.floor.get)
@@ -44,9 +42,13 @@ object FlatRepo {
      params.put("lastSeenAt",new Date())
      new org.bson.Document(params)
    }
-   val docs: FindIterable[Document] = db.getCollection(COLL_NAME).find(findFilter(flat))
-   if (db.getCollection(COLL_NAME).findOneAndReplace(findFilter(flat)
-     ,createDocument(flat)) == null){
+   def createDocument(flat: Flat): org.bson.Document = {
+     val params = updateDocument(flat)
+     params.put("firstSeenAt",new Date())
+     params
+   }
+   if (db.getCollection(COLL_NAME).findOneAndUpdate(findFilter(flat)
+     ,new Document("$set",updateDocument(flat))) == null){
      db.getCollection(COLL_NAME).insertOne(createDocument(flat))
      FlatStatus.Added
    }
@@ -61,13 +63,26 @@ object FlatRepo {
    val flats = ListBuffer[Flat]()
    while (cursor.hasNext){
      val doc = cursor.next()
-     flats += new Flat(Option(doc.get("address").toString),
+     var firstSeenAt : Option[Date] = None
+     if (doc.get("firstSeenAt") == null){
+       firstSeenAt = Option(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse("01-01-2017 00:00:00"))
+     }
+     else {
+       firstSeenAt = Option(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
+         .parse(doc.get("firstSeenAt").toString))
+     }
+     flats += new Flat(
+       Option(doc.get("address").toString),
        Option(doc.get("rooms").toString),
        Option(doc.get("size").toString.toInt),
        Option(doc.get("floor").toString),
        Option(doc.get("price").toString.toInt),
-       Option(doc.get("link").toString))
+       Option(doc.get("link").toString),
+       firstSeenAt,
+       Option(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(doc.get("lastSeenAt").toString))
+     )
    }
+   cursor.close()
    flats.toList
  }
 

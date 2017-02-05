@@ -36,4 +36,9 @@ class FlatRepoTest extends FunSuite{
     assert(doc.get("link") === null)
   }
 
+  test("historic flats") {
+    val flats : List[Flat] = FlatRepo.findHistoricAdds(new Flat(Option("Artilērijas 46"),Option("1"),
+      Option(29),Option("2/4")))
+  }
+
 }

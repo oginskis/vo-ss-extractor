@@ -1,7 +1,8 @@
 package org.oginskis.ss.tool
 
+import java.text.SimpleDateFormat
 import javax.mail._
-import javax.mail.internet.{MimeMultipart, MimeBodyPart, InternetAddress, MimeMessage}
+import javax.mail.internet.{InternetAddress, MimeBodyPart, MimeMessage, MimeMultipart}
 
 import org.oginskis.ss.model.Flat
 import org.oginskis.ss.repo.FlatRepo
@@ -44,8 +45,10 @@ object EmailSender {
           ).array
       )
       var historicFlatStr = FlatRepo.findHistoricAdds(new Flat(flat.address,flat.rooms,flat.size,flat.floor))
-          .filterNot(incomingFlat=>(incomingFlat.link == flat.link))
-          .map(flat=>flat.price.get+" EUR")
+          .filterNot(incomingFlat=>(incomingFlat.link == flat.link && incomingFlat.price == flat.price))
+          .sortBy(flat=>flat.firstSeenAt)
+          .map(flat=>flat.price.get+" EUR - Active between "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(flat.firstSeenAt.get)+
+            " and "+new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(flat.lastSeenAt.get))
           .mkString("<br />")
       if (historicFlatStr.isEmpty){
         historicFlatStr = "Nothing has been found"

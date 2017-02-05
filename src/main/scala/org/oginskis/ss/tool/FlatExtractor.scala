@@ -24,8 +24,7 @@ object FlatExtractor {
   def extractFlats() : List[Flat] = {
     def extractFlats(page: Int) : List[Flat] = {
       try {
-        val doc = browser
-          .get(Properties.getProperty(SS_LV_BASE)+"/riga/centre/sell/page"
+        val doc = browser.get(Properties.getProperty(SS_LV_BASE)+"/riga/centre/sell/page"
             + page + ".html")
         val rawList: Iterable[Element] = doc.body.select("[id^=\"tr_\"]")
         rawList.init.toList.map(

@@ -1,5 +1,7 @@
 package org.oginskis.ss.model
 
+import java.util.Date
+
 
 /**
   * Created by oginskis on 30/12/2016.
@@ -10,29 +12,49 @@ class Flat(
             val size: Option[Int],
             val floor: Option[String],
             val price: Option[Int],
-            val link: Option[String]
+            val link: Option[String],
+            val firstSeenAt: Option[Date],
+            val lastSeenAt: Option[Date]
           ) {
 
   def this(address: Option[String],
     rooms: Option[String],
     size: Option[Int],
     floor: Option[String]) = {
-    this(address,rooms,size,floor,None,None)
+    this(address,rooms,size,floor,None,None,None,None)
+  }
+
+  def this(address: Option[String],
+           rooms: Option[String],
+           size: Option[Int],
+           floor: Option[String],
+           price: Option[Int],
+           link: Option[String]) = {
+    this(address,rooms,size,floor,price,link,None,None)
   }
 
   override def toString: String = {
-    if (price == None && link == None){
+    if (price == None && link == None && lastSeenAt == None && firstSeenAt == None) {
       "address: " + address.get + ", " +
         "rooms: " + rooms.get + ", " +
         "size: " + size.get + ", " +
         "floor: " + floor.get
-    } else {
+    } else if (lastSeenAt == None && firstSeenAt == None){
       "address: " + address.get + ", " +
         "rooms: " + rooms.get + ", " +
         "size: " + size.get + ", " +
         "floor: " + floor.get + ", " +
         "price: " + price.get + ", " +
         "link: https://www.ss.lv" + link.get
+    } else {
+      "address: " + address.get + ", " +
+        "rooms: " + rooms.get + ", " +
+        "size: " + size.get + ", " +
+        "floor: " + floor.get + ", " +
+        "price: " + price.get + ", " +
+        "link: https://www.ss.lv" + link.get + ", " +
+        "firstSeenAt: " + firstSeenAt.get + ", " +
+        "lastSeenAt: " + lastSeenAt.get
     }
   }
 }

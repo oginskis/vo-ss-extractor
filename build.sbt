@@ -1,6 +1,6 @@
 name := """vo-ss-extractor"""
 
-version := "1.0"
+version := "2.5"
 
 scalaVersion := "2.11.6"
 
